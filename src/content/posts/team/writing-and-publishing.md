@@ -24,6 +24,13 @@ tags: [design, tooling]
 
 `title`, `published`, and `category` are required. A description supplies the summary used on listing pages and in page metadata. Tags are free-form and may be omitted.
 
+Write dates as ISO `YYYY-MM-DD`, regardless of the interface language. Add an
+optional `updated: 2026-08-24` when revising a post. The site's `locale` in
+`src/config.ts` controls the displayed dates and reading-time labels; dates
+are formatted in UTC. For example, `2026-08-22` appears as `August 22, 2026`
+in English and `2026년 8월 22일` in Korean. The stored values, post URLs and
+article text are unaffected. The README lists compact and revision formats.
+
 The category must be one of the keys defined in `src/config.ts`. Keeping that list explicit prevents a typo from silently creating a nearly empty category.
 
 ## Write the body

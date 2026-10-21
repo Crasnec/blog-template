@@ -55,7 +55,7 @@ npm run astro -- dev stop
 
 | File | What to change |
 | --- | --- |
-| [`src/config.ts`](src/config.ts) | Site URL, title, subtitle, description, profile, links, categories and navigation |
+| [`src/config.ts`](src/config.ts) | Interface locale, site URL, title, subtitle, description, profile, links, categories and navigation |
 | [`src/assets/profile-avatar.png`](src/assets/profile-avatar.png) | Replace the neutral placeholder with your own image |
 | [`src/content/pages/about.md`](src/content/pages/about.md) | Introduce yourself |
 | `src/content/posts/` | Replace the example articles or keep the ones useful to your readers |
@@ -83,6 +83,65 @@ the deployment base, a Markdown plugin, content schema or theme.
 
 See [`src/styles/themes/README.md`](src/styles/themes/README.md) for theme
 tokens, typography and layout overrides.
+
+## Language and date formatting
+
+Set the interface language in `src/config.ts`:
+
+```ts
+export const siteConfig = {
+  locale: "ko", // "en" (default) or "ko"
+  // Keep your other site settings here.
+};
+```
+
+Rebuild with `npm run build:clean` after changing it. In development, restart
+the server so server-rendered messages and browser bundles use the same locale.
+No additional dependencies are needed.
+
+The locale applies to navigation, search, comments, locked-post controls,
+figure replay controls, code playground controls and status messages,
+CodeMirror's built-in find/replace panel, default category names, post counts,
+reading times, document language, sharing metadata and the search index.
+Category keys and post URLs stay the same. You can still replace category
+display names in `src/config.ts` with your own labels.
+
+Pagefind selects its index from the document language. Korean search works,
+but the bundled release does not provide Korean stemming: related word forms
+are not automatically treated as the same search term.
+
+The formatters in [`src/utils/format.ts`](src/utils/format.ts) use the same
+setting throughout listings, archives, articles, comments and social images:
+
+| Display | `en` | `ko` |
+| --- | --- | --- |
+| Full date | October 21, 2026 | 2026년 10월 21일 |
+| Compact date | 2026 · 10 · 21 | 2026. 10. 21. |
+| Archive month/day | 10 · 21 | 10. 21. |
+| Archive year | 2026 | 2026년 |
+| Revision in the same year | Updated October 21 | 10월 21일 수정 |
+| Revision in another year | Updated October 21, 2027 | 2027년 10월 21일 수정 |
+| Post count | 1 post / 2 posts | 1개의 글 / 2개의 글 |
+| Reading time | 3 min | 3분 |
+
+Dates are formatted in **UTC**, independent of the reader's device timezone.
+Locale changes the display, not the stored instant or calendar policy. Write
+frontmatter dates as ISO `YYYY-MM-DD`, for example `published: 2026-10-21` and
+`updated: 2027-10-21`. Machine-readable `<time datetime>`, JSON-LD dates and
+publication timestamps retain their ISO formats.
+
+One locale is selected for the whole site at build time. This does not generate
+translated posts, language-prefixed routes or a language switcher. Post prose,
+titles, descriptions, tags, custom site/profile text, and diagram data, units
+and labels remain exactly as authored. Example articles and project
+documentation stay in English. Compiler errors and third-party runtime
+diagnostics retain their original text; surrounding controls and status
+messages use the selected locale.
+
+Interface messages live in [`src/locales/`](src/locales/). The Korean catalog
+must contain every English key, and checks verify that interpolation
+placeholders match. Add new common messages to both catalogs. CodeMirror's
+own phrase map is in `src/locales/editor.ts`.
 
 ## Write a post
 
@@ -159,6 +218,7 @@ With the development server running:
 ```bash
 npm run test:figures:browser
 npm run test:playground:browser
+npm run test:locale:browser
 npm run figures:shot -- /posts/build/statistical-figures/
 ```
 
@@ -168,6 +228,9 @@ also need its system dependencies: `npx playwright install --with-deps chromium`
 Node tests and the default CI workflow do not require a browser installation.
 
 Use `FIGURES_BASE` or `PLAYGROUND_BASE` to target a running server explicitly.
+For locale checks, use `LOCALE_BASE` and `EXPECTED_LOCALE=en` or
+`EXPECTED_LOCALE=ko` to verify an existing build of that locale. These test
+variables do not change the site's configured language.
 Screenshot options are documented in the figure reference. Inspect screenshots
 at mobile and desktop widths in both themes before publishing a figure change.
 
