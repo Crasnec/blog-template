@@ -1,4 +1,4 @@
-/** Default interface messages. Placeholder names must match across locales. */
+/** English interface messages. Placeholder names must match across locales. */
 export const en = {
 	"nav.posts": "Posts",
 	"nav.archive": "Archive",
