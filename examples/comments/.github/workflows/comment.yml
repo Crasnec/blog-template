@@ -1,0 +1,60 @@
+name: comment
+
+# Started directly from a reader's browser. The token that does it is public and
+# is scoped to this repository's Actions API, so everything that decides what ends
+# up in the repository is here, in code, where it can be reviewed.
+on:
+  workflow_dispatch:
+    inputs:
+      post:
+        description: Post key
+        required: true
+      author:
+        description: Author name
+        required: true
+      body:
+        description: Comment body
+        required: true
+      lang:
+        description: Locale it was written from
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+# Two comments arriving together would race on the push, so they queue instead.
+concurrency:
+  group: comment-store
+  cancel-in-progress: false
+
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate and write
+        # Inputs are handed over as environment variables and read by the script.
+        # Interpolating `${{ inputs.body }}` into a run block would hand a
+        # stranger the shell — the comment body would be the command.
+        env:
+          COMMENT_POST: ${{ inputs.post }}
+          COMMENT_AUTHOR: ${{ inputs.author }}
+          COMMENT_BODY: ${{ inputs.body }}
+          COMMENT_LANG: ${{ inputs.lang }}
+        run: node .github/store-comment.mjs
+
+      - name: Commit
+        # Fixed message on purpose: nothing from the submission reaches the
+        # shell, and the diff already says what arrived.
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "nothing to store"
+            exit 0
+          fi
+          git config user.name "comment-bot"
+          git config user.email "comment-bot@users.noreply.github.com"
+          git add .
+          git commit -m "comment"
+          git push
