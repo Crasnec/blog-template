@@ -10,7 +10,7 @@ import { translate, type Locale } from "./locales/index.ts";
 
 export const siteConfig = {
 	/** Interface language. Does not translate posts or change their URLs. */
-	locale: "ko" satisfies Locale,
+	locale: "en" satisfies Locale,
 
 	/** Absolute site origin. Replace this placeholder before publishing. */
 	url: "https://example.com",

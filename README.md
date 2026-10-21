@@ -90,7 +90,7 @@ Set the interface language in `src/config.ts`:
 
 ```ts
 export const siteConfig = {
-  locale: "ko", // "ko" (default) or "en"
+  locale: "ko", // "en" (default) or "ko"
   // Keep your other site settings here.
 };
 ```
