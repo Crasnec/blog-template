@@ -31,7 +31,8 @@ credentials or production deployment target is included.
 
 ## Start your blog
 
-Requirements: Node.js **22.19 or newer**, npm and Git. CI uses Node.js 24.
+Requirements: Node.js **22.23.4 or newer**, npm and Git. CI uses Node.js 24.
+The included `.nvmrc` selects Node.js 24; run `nvm install` and `nvm use` if you use nvm.
 
 1. Select **Use this template → Create a new repository** on GitHub.
 2. Clone your new repository and enter its directory.
@@ -68,22 +69,38 @@ composition, search failures, and mobile section links.
 
 ## Code style
 
-TypeScript uses Astro's strictest configuration, including checked JavaScript.
+TypeScript 7.0.2 checks JavaScript and TypeScript through the native CLI, using
+Astro's strictest configuration. `npm run check:types` generates Astro types,
+runs the native checker, and then checks Astro templates with `astro check`.
+`npm run tsc -- --noEmit` explicitly selects the native compiler without relying
+on whichever `tsc` binary npm hoists; `npm run tsc -- --version` reports its version.
+
+Astro's checker, typed ESLint, and the browser playground still require the
+TypeScript 6 compiler API. The `typescript` dependency therefore uses Microsoft's
+`@typescript/typescript6` compatibility package, while `@typescript/native`
+selects TypeScript 7. The compatibility API resolves to 6.0.3 in the lockfile;
+the playground uses it for syntax checking and transpilation, not full type checking.
+See [Microsoft's migration guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0).
+
 ESLint applies type-aware strict and stylistic rules to JavaScript, TypeScript
 and Astro, plus accessibility rules to components. External messages and runtime
-results are validated before use. Run `npm run check` for Astro type checking,
-ESLint, and the Node test suite before building.
+results are validated before use. Run `npm run check` for native TypeScript and
+Astro type checking, ESLint, and the Node test suite before building.
 
 Linted JavaScript, TypeScript, TSX and Astro code uses four spaces for each
 indentation level, semicolons, and a maximum line length of 100 characters.
 Lines containing URLs, strings, template literals or regular expressions are
 exempt from the length limit. Comments otherwise follow the same 100-character
-limit. These are the only additional ESLint style rules; existing type-safety
-and accessibility checks remain enabled.
+limit. Control-flow bodies use braces and span multiple lines. Adjacent function
+declarations, exported functions, variable-bound arrow/function expressions, and
+class methods are separated by one blank line. Consecutive empty lines are limited
+to one. Ordinary data fields and variables need no extra spacing; concise arrow
+bodies and object-literal callbacks remain allowed. Type-safety and accessibility
+checks remain enabled.
 
 ```bash
 npm run lint:fix  # Format, then apply ESLint fixes
-npm run lint      # Enforce the three style rules and existing checks
+npm run lint      # Enforce code style, type-safety, and accessibility checks
 ```
 
 Prettier's 100-column setting helps wrap code; ESLint enforces the actual limit
@@ -323,7 +340,7 @@ See [the playground API](src/playground/README.md) for configuration and limits.
 ## Checks
 
 ```bash
-npm run check       # Astro types, ESLint and Node tests
+npm run check       # Native TypeScript, Astro types, ESLint and Node tests
 npm run build       # Static HTML, assets and Pagefind index
 npm run preview     # Serve dist/
 npm run build:clean # Rebuild after changing themes, plugins, schema or base

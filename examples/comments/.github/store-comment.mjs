@@ -40,10 +40,18 @@ const author = clean(process.env.COMMENT_AUTHOR);
 const body = clean(process.env.COMMENT_BODY).replace(/\r\n/g, "\n");
 const lang = clean(process.env.COMMENT_LANG);
 
-if (!POST_KEY.test(post)) reject("post key");
-if (author.length === 0 || author.length > MAX_AUTHOR) reject("author length");
-if (body.length === 0 || body.length > MAX_BODY) reject("body length");
-if (lang && !/^[a-z]{2}$/.test(lang)) reject("lang");
+if (!POST_KEY.test(post)) {
+    reject("post key");
+}
+if (author.length === 0 || author.length > MAX_AUTHOR) {
+    reject("author length");
+}
+if (body.length === 0 || body.length > MAX_BODY) {
+    reject("body length");
+}
+if (lang && !/^[a-z]{2}$/.test(lang)) {
+    reject("lang");
+}
 
 const published = new Date().toISOString();
 
