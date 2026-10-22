@@ -22,7 +22,8 @@ const MAX_BODY = 2000;
 const POST_KEY = /^[a-z0-9][a-z0-9/-]{0,80}$/;
 
 /** Control characters are the usual way to smuggle something past a check. */
-// eslint-disable-next-line no-control-regex -- Strip input controls while preserving tabs and newlines.
+// Strip input controls while preserving tabs and newlines.
+// eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 
 /** @param {string | undefined} value */
@@ -30,8 +31,8 @@ const clean = (value) => (value ?? "").replace(CONTROL, "").trim();
 
 /** @param {string} reason */
 function reject(reason) {
-	console.error(`rejected: ${reason}`);
-	process.exit(1);
+    console.error(`rejected: ${reason}`);
+    process.exit(1);
 }
 
 const post = clean(process.env.COMMENT_POST);
@@ -51,24 +52,24 @@ const published = new Date().toISOString();
  * lands on the same filename and overwrites rather than posting twice.
  */
 const id = createHash("sha256")
-	.update(`${post}\u0000${author}\u0000${body}`)
-	.digest("hex")
-	.slice(0, 12);
+    .update(`${post}\u0000${author}\u0000${body}`)
+    .digest("hex")
+    .slice(0, 12);
 
 const record = {
-	post,
-	author,
-	body,
-	published,
-	...(lang ? { lang } : {}),
-	// Nothing reaches a reader until this is flipped by hand.
-	approved: false,
+    post,
+    author,
+    body,
+    published,
+    ...(lang ? { lang } : {}),
+    // Nothing reaches a reader until this is flipped by hand.
+    approved: false,
 };
 
 mkdirSync(post, { recursive: true });
 writeFileSync(
-	`${post}/${published.slice(0, 10)}-${id}.json`,
-	`${JSON.stringify(record, null, 2)}\n`,
+    `${post}/${published.slice(0, 10)}-${id}.json`,
+    `${JSON.stringify(record, null, 2)}\n`,
 );
 
 console.log(`stored ${post}/${published.slice(0, 10)}-${id}.json`);

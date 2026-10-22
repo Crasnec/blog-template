@@ -54,6 +54,27 @@ npm run astro -- dev logs
 npm run astro -- dev stop
 ```
 
+## Code style
+
+Linted JavaScript, TypeScript, TSX and Astro code uses four spaces for each
+indentation level, semicolons, and a maximum line length of 100 characters.
+Lines containing URLs, strings, template literals or regular expressions are
+exempt from the length limit. Comments otherwise follow the same 100-character
+limit. These are the only additional ESLint style rules; existing type-safety
+and accessibility checks remain enabled.
+
+```bash
+npm run lint:fix  # Format, then apply ESLint fixes
+npm run lint      # Enforce the three style rules and existing checks
+```
+
+Prettier's 100-column setting helps wrap code; ESLint enforces the actual limit
+with the exceptions above. A few long comments may still require manual line
+breaks. `.editorconfig` also requests four-space indentation in editors.
+Markdown, MDX articles, notebook data, downloadable Python sources and static
+assets are excluded from the formatting command. Embedded code strings are
+preserved. The same settings apply to the blog template.
+
 ## Make it yours
 
 | File | What to change |

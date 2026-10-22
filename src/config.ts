@@ -9,34 +9,31 @@
 import type { Locale } from "./locales/index.ts";
 
 export const siteConfig = {
-	/** Interface language. Does not translate posts or change their URLs. */
-	locale: "en" satisfies Locale,
+    /** Interface language. Does not translate posts or change their URLs. */
+    locale: "en" satisfies Locale,
 
-	/** Absolute site origin. Replace this placeholder before publishing. */
-	url: "https://example.com",
+    /** Absolute site origin. Replace this placeholder before publishing. */
+    url: "https://example.com",
 
-	/** Shown in the masthead and in <title>. */
-	title: "Your Blog",
+    /** Shown in the masthead and in <title>. */
+    title: "Your Blog",
 
-	/** One line under the title. Keep it short; it sits on a single line. */
-	subtitle: "Notes on software, data and the ideas behind them",
+    /** One line under the title. Keep it short; it sits on a single line. */
+    subtitle: "Notes on software, data and the ideas behind them",
 
-	description:
-		"A personal blog for technical articles, diagrams and executable examples.",
+    description: "A personal blog for technical articles, diagrams and executable examples.",
 
-	/** Posts per page on the index. */
-	postsPerPage: 6,
+    /** Posts per page on the index. */
+    postsPerPage: 6,
 
-	/** Deepest heading level that reaches the contents (2 = h2 and h3). */
-	tocDepth: 2,
+    /** Deepest heading level that reaches the contents (2 = h2 and h3). */
+    tocDepth: 2,
 } as const;
 
 export const profileConfig = {
-	name: "Your Name",
-	bio: "Write a short introduction here, then replace the example posts with your own work.",
-	links: [
-		{ name: "GitHub", url: "https://github.com/your-username" },
-	],
+    name: "Your Name",
+    bio: "Write a short introduction here, then replace the example posts with your own work.",
+    links: [{ name: "GitHub", url: "https://github.com/your-username" }],
 } as const;
 
 /**
@@ -61,25 +58,25 @@ export const profileConfig = {
  * `import.meta.env`.
  */
 export const commentsConfig = {
-	/** Workflow file in that repository that receives a comment. */
-	workflow: "comment.yml",
+    /** Workflow file in that repository that receives a comment. */
+    workflow: "comment.yml",
 
-	/** Branch the workflow runs on. */
-	branch: "main",
+    /** Branch the workflow runs on. */
+    branch: "main",
 
-	/**
-	 * Rejected past this length — counted on the source Markdown, shown live in
-	 * the form, and enforced again in the workflow, which is the one that counts.
-	 */
-	maxBody: 2000,
-	maxAuthor: 60,
+    /**
+     * Rejected past this length — counted on the source Markdown, shown live in
+     * the form, and enforced again in the workflow, which is the one that counts.
+     */
+    maxBody: 2000,
+    maxAuthor: 60,
 } as const;
 
 /* Coarse to fine: everything, then by date, then by area, then by technology. */
 export const navLinks = [
-	{ key: "nav.posts", href: "/" },
-	{ key: "nav.archive", href: "/archive/" },
-	{ key: "nav.categories", href: "/categories/" },
-	{ key: "nav.tags", href: "/tags/" },
-	{ key: "nav.about", href: "/about/" },
+    { key: "nav.posts", href: "/" },
+    { key: "nav.archive", href: "/archive/" },
+    { key: "nav.categories", href: "/categories/" },
+    { key: "nav.tags", href: "/tags/" },
+    { key: "nav.about", href: "/about/" },
 ] as const;
