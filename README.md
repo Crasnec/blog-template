@@ -17,8 +17,10 @@ an independent repository with your own content and history.
 - Thirty statistical plots, including distribution, regression, time-series,
   survival and classification views
 - Typed TSX figure composition imported into MDX, including bespoke SVG figures
-- Editable JavaScript, TypeScript and Python, with custom TextMate grammars
-- Approved NumPy, pandas, SciPy, Matplotlib and Seaborn packages, loaded as needed
+- Editable JavaScript, TypeScript and Python, with interactive input and
+  author-defined TextMate grammars
+- Approved NumPy, pandas, SciPy, Matplotlib, Seaborn, empiricaldist, statadict,
+  statsmodels and IPython packages, loaded as needed
 - Optional author-encrypted posts and moderated repository-backed comments
 - Checks on pushes and pull requests, plus an optional GitHub Pages deployment
 
@@ -201,8 +203,21 @@ current theme and reduced-motion preference.
 
 Python runs in a Worker using the pinned official Pyodide runtime. Scientific
 packages are limited to an approved dependency graph and hosted on the same
-origin as the site. Matplotlib and Seaborn output PNG images that readers can
-download. No arbitrary npm or PyPI packages are automatically installed.
+origin as the site. Matplotlib, Seaborn and empiricaldist output PNG images
+that readers can download. No arbitrary npm or PyPI packages are automatically
+installed.
+
+Python supports `input(prompt)` in browsers with WebAssembly JSPI and
+`await read_input(prompt)` without that requirement. JavaScript and TypeScript
+use `await input(prompt)`. Readers enter a line below the output, submit it
+with Enter or Send, or choose End input (EOF). Waiting for input pauses the
+execution deadline; Stop and Reset cancel a pending input.
+
+Authors configure custom TextMate grammars in MDX with the `grammars` prop,
+using files imported with `?raw`. The first grammar is the entry point,
+followed by any dependent grammars. Readers edit code using those fixed
+grammars. Invalid grammar syntax or duplicate scopes fail the build.
+See [the playground API](src/playground/README.md) for configuration and limits.
 
 ## Checks
 
