@@ -13,14 +13,15 @@ an independent repository with your own content and history.
 - Categories, tags, archives, pagination and a table of contents
 - Pagefind search, generated social images, favicons and a sitemap
 - Reusable animated diagrams for queues, sorting, paths, trees, hashing,
-  scheduling, memory, sequence messages and state machines
+  scheduling, memory, hex editing, sequence messages and state machines
 - Thirty statistical plots, including distribution, regression, time-series,
   survival and classification views
 - Typed TSX figure composition imported into MDX, including bespoke SVG figures
 - Editable JavaScript, TypeScript and Python, with interactive input and
   author-defined TextMate grammars
+- Linked Python notebook cells with shared state, Run all, restart and `.ipynb` export
 - Approved NumPy, pandas, SciPy, Matplotlib, Seaborn, empiricaldist, statadict,
-  statsmodels and IPython packages, loaded as needed
+  statsmodels, IPython, lxml and SymPy packages, loaded as needed
 - Optional author-encrypted posts and moderated repository-backed comments
 - Checks on pushes and pull requests, plus an optional GitHub Pages deployment
 
@@ -144,6 +145,10 @@ Interface messages live in [`src/locales/`](src/locales/). The Korean catalog
 must contain every English key, and checks verify that interpolation
 placeholders match. Add new common messages to both catalogs. CodeMirror's
 own phrase map is in `src/locales/editor.ts`.
+
+Notebook cells use the existing CodePlayground runtime. The working authoring
+example is `src/content/posts/build/python-notebook.mdx`; implementation and
+execution details are in [`src/playground/README.md`](src/playground/README.md).
 
 ## Write a post
 

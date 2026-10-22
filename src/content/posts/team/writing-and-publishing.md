@@ -78,3 +78,12 @@ Add `draft: true` to keep unfinished writing out of a production build. Remove i
 For content that should be listed publicly but readable only with a passphrase, use the private-post workflow described in [Private Posts and Moderated Comments](../../backend/private-posts-and-comments/).
 
 Once the checks pass, commit and push the source. Continuous integration checks every push. Once you configure GitHub Pages as described in the README, the separate deployment workflow publishes the generated files.
+
+
+## Linked Python cells
+
+For an executable lesson, use the existing CodePlayground with an author-defined
+`notebook` ID and a matching PythonNotebook toolbar. Cells share state only
+within that ID. Run all, restart, input and code export are provided by the
+same browser Python runtime. See [the authoring example](../../build/python-notebook/).
+Use `runAll={false}` for unfinished exercises or optional interactive cells.
