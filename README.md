@@ -206,11 +206,13 @@ Adjust relative import paths to the depth of your article. Figure captions and
 replay controls retain their space throughout playback. Plots respect the
 current theme and reduced-motion preference.
 
-Python runs in a Worker using the pinned official Pyodide runtime. Scientific
-packages are limited to an approved dependency graph and hosted on the same
-origin as the site. Matplotlib, Seaborn and empiricaldist output PNG images
-that readers can download. No arbitrary npm or PyPI packages are automatically
-installed.
+Python runs in a Worker using the pinned official Pyodide runtime. Imports
+load packages from the full Pyodide catalog; compatible PyPI wheels can be
+installed with `micropip.install()` or the author's `pythonPackages` prop.
+Common scientific packages remain bundled locally with pinned hashes.
+JavaScript and TypeScript resolve browser-compatible npm imports through esm.sh.
+Matplotlib, Seaborn and empiricaldist output downloadable PNG images.
+Silent runs keep a compact output area with a visible completion status.
 
 Python supports `input(prompt)` in browsers with WebAssembly JSPI and
 `await read_input(prompt)` without that requirement. JavaScript and TypeScript
