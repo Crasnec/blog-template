@@ -29,11 +29,13 @@ are formatted in UTC. For example, `2026-08-22` appears as `August 22, 2026`
 in English and `2026년 8월 22일` in Korean. The stored values, post URLs and
 article text are unaffected. The README lists compact and revision formats.
 
-The first folder below `src/content/posts/` determines the category. A post in
-`build/` belongs to **build**, including posts nested more deeply inside it.
-Folder names are displayed exactly as authored and never translated. Creating
-a folder adds a category automatically once it contains a published post;
-there is no category registration or frontmatter field.
+Every folder below `src/content/posts/` is a category level. A post in
+`build/Tools/` belongs to **build / Tools** and appears in both category pages.
+Parent counts include all descendant posts. The sidebar and category index show
+the directory tree, and breadcrumbs link to its ancestors. Folder names stay
+exactly as authored and are never translated. There is no category registration
+or frontmatter field; adding a folder adds a level once it contains a published
+post, directly or in a descendant folder.
 
 ## Write the body
 

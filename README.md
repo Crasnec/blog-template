@@ -167,17 +167,29 @@ draft: false
 ---
 ```
 
-`title` and `published` are required. The first folder below
-`src/content/posts/` is the category. Its name is displayed exactly as authored
-and never translated. For example, `Statistics/nested/intro.mdx` belongs to
-**Statistics**; nested folders remain part of the post URL. No registration or
-frontmatter category field is needed. Category URLs use the same folder slugs
-as Astro post URLs: lowercase, spaces replaced with hyphens and punctuation
-removed, with Unicode preserved. Folder
-names that produce the same slug cannot be separate categories.
-Renaming or moving a folder can change URLs. Empty folders do not appear in
-category lists. Tags are free-form. Drafts are visible during development and
-excluded from production builds.
+`title` and `published` are required.
+
+Every directory below `src/content/posts/` is a category level. Folder names
+are displayed exactly as authored and are never translated. For example:
+
+```text
+src/content/posts/Statistics/Probability/Continuous/normal.mdx
+```
+
+This post belongs to **Statistics / Probability / Continuous**. Its category
+page is `/categories/statistics/probability/continuous/`; its post URL remains
+`/posts/statistics/probability/continuous/normal/`. The parent **Statistics**
+page includes posts in all its subcategories. Counts include descendants, even
+when no posts are filed directly in a parent folder. The index and sidebar show
+the tree; breadcrumbs link back through its ancestors.
+
+No registration or frontmatter category field is needed. URL segments use the
+same slugging as Astro post URLs: lowercase, spaces replaced with hyphens and
+punctuation removed, with Unicode preserved. Equal leaf names under different
+parents are separate categories. Names producing the same URL under the same
+parent fail validation. Renaming or moving folders can change URLs. Empty
+folders do not appear in the tree. Tags are free-form. Drafts are visible during
+development and excluded from production builds.
 
 Use `.mdx` when a post imports components. Keep post-specific datasets and TSX
 compositions in a neighbouring `_figures/` directory; these files are not posts.
@@ -354,6 +366,22 @@ test/              Unit and browser checks
 `dist/`, `.astro/`, `.comments/`, `.cache/python/`, `node_modules/`, `secrets/`,
 local `.env*` files and screenshot output are ignored. Only `.env.example` is
 tracked as a blank configuration reference.
+
+## Category hierarchy regression checks
+
+The eight articles in `src/fixtures/categories/` exercise parent counts, deep
+paths, equal leaf names under different parents, Unicode names and long mobile
+labels. They are outside the published collection. To serve them explicitly,
+stop the normal server and run:
+
+```bash
+BLOG_POSTS_DIR=./src/fixtures/categories npm run astro -- dev --background
+npm run test:categories:browser
+```
+
+`CATEGORIES_BASE` can instead point the browser suite at a fixture build.
+Screenshots are written to `.figures-shots-category-hierarchy/`. Restart the
+server without `BLOG_POSTS_DIR` to return to real articles.
 
 ## License
 
