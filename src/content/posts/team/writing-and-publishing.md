@@ -2,7 +2,6 @@
 title: Writing and Publishing a Post
 published: 2026-08-21
 description: The shortest path from a Markdown file to a finished article on GitHub Pages.
-category: team
 tags: [writing, markdown, publishing]
 ---
 
@@ -17,7 +16,6 @@ Start a post with a small block of metadata:
 title: Small, Reliable Tools
 published: 2026-08-22
 description: Why a narrow tool is often easier to trust and maintain.
-category: build
 tags: [design, tooling]
 ---
 ```
@@ -31,7 +29,11 @@ are formatted in UTC. For example, `2026-08-22` appears as `August 22, 2026`
 in English and `2026년 8월 22일` in Korean. The stored values, post URLs and
 article text are unaffected. The README lists compact and revision formats.
 
-The category must be one of the keys defined in `src/config.ts`. Keeping that list explicit prevents a typo from silently creating a nearly empty category.
+The first folder below `src/content/posts/` determines the category. A post in
+`build/` belongs to **build**, including posts nested more deeply inside it.
+Folder names are displayed exactly as authored and never translated. Creating
+a folder adds a category automatically once it contains a published post;
+there is no category registration or frontmatter field.
 
 ## Write the body
 
@@ -69,7 +71,7 @@ npm run check
 npm run build
 ```
 
-The content collection validates frontmatter during these commands. A missing field or unknown category fails early instead of producing a broken page.
+The content collection validates frontmatter during these commands. A missing required field or a post outside a category folder fails early instead of producing a broken page.
 
 ## Control visibility
 

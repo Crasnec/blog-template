@@ -9,8 +9,8 @@ import { isJsonObject, parseJson } from "../src/utils/json.ts";
 const locale = process.env.EXPECTED_LOCALE ?? siteConfig.locale;
 assert.ok(locale === "en" || locale === "ko", "EXPECTED_LOCALE must be en or ko");
 const messages = {
-	en: { date: "October 21, 2026", stamp: "2026 · 10 · 21", year: "2026", find: "Find", count: "17 posts" },
-	ko: { date: "2026년 10월 21일", stamp: "2026. 10. 21.", year: "2026년", find: "찾기", count: "17개의 글" },
+	en: { date: "October 21, 2026", stamp: "2026 · 10 · 21", find: "Find" },
+	ko: { date: "2026년 10월 21일", stamp: "2026. 10. 21.", find: "찾기" },
 }[locale];
 let browser: Browser;
 let page: Page;
@@ -37,16 +37,20 @@ void test("configured locale reaches navigation, document metadata and compact d
 	assert.equal(await page.locator('meta[property="og:locale"]').getAttribute("content"), languageTags[locale].replace("-", "_"));
 	assert.match(await page.locator('script[type="application/ld+json"]').innerText(), new RegExp(languageTags[locale], "u"));
 	assert.equal((await page.locator('time[datetime="2026-10-21"]').first().innerText()).trim(), messages.stamp);
-	assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), `https://example.com${base.pathname}`);
+	assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), new URL(base.pathname, siteConfig.url).href);
 });
 
-void test("archive dates, counts and category names localize without changing post routes", async () => {
+void test("archive dates and counts localize while category folder names remain unchanged", async () => {
 	await page.goto(new URL("archive/", base).href, { waitUntil: "networkidle" });
-	assert.equal((await page.locator(".year-number").innerText()).trim(), messages.year);
-	assert.equal((await page.locator(".year-count").innerText()).trim(), messages.count);
-	assert.ok((await page.locator(".archive-day").first().innerText()).includes(locale === "ko" ? "10. 21." : "10 · 21"));
+	const group = page.locator(".year-group").first();
+	const year = (await group.getAttribute("id"))?.slice(1);
+	assert.ok(year);
+	assert.equal((await group.locator(".year-number").innerText()).trim(), translate(locale, "date.year", { year }));
+	const count = await group.locator(".archive-item").count();
+	assert.equal((await group.locator(".year-count").innerText()).trim(), translate(locale, count === 1 ? "index.countOne" : "index.count", { count: count.toLocaleString(languageTags[locale]) }));
+	assert.ok((await page.locator('.archive-day[datetime="2026-10-21"]').first().innerText()).includes(locale === "ko" ? "10. 21." : "10 · 21"));
 	await page.goto(new URL("categories/", base).href, { waitUntil: "networkidle" });
-	assert.equal((await page.locator('.category-link[href$="/categories/build/"] .category-name').innerText()).trim(), translate(locale, "category.build"));
+	assert.equal((await page.locator('.category-link[href*="/categories/build"] .category-name').innerText()).trim(), "build");
 	const links = await page.locator(".category-link").evaluateAll((elements) => elements.map((element) => element.getAttribute("href")));
 	assert.ok(links.every((href) => href?.startsWith(`${base.pathname}categories/`)));
 });

@@ -58,7 +58,7 @@ npm run astro -- dev stop
 
 | File | What to change |
 | --- | --- |
-| [`src/config.ts`](src/config.ts) | Interface locale, site URL, title, subtitle, description, profile, links, categories and navigation |
+| [`src/config.ts`](src/config.ts) | Interface locale, site URL, title, subtitle, description, profile, links and navigation |
 | [`src/assets/profile-avatar.png`](src/assets/profile-avatar.png) | Replace the neutral placeholder with your own image |
 | [`src/content/pages/about.md`](src/content/pages/about.md) | Introduce yourself |
 | `src/content/posts/` | Replace the example articles or keep the ones useful to your readers |
@@ -104,10 +104,11 @@ No additional dependencies are needed.
 
 The locale applies to navigation, search, comments, locked-post controls,
 figure replay controls, code playground controls and status messages,
-CodeMirror's built-in find/replace panel, default category names, post counts,
+CodeMirror's built-in find/replace panel, post counts,
 reading times, document language, sharing metadata and the search index.
-Category keys and post URLs stay the same. You can still replace category
-display names in `src/config.ts` with your own labels.
+Category names come directly from their folders and are excluded from
+localization. Changing the interface locale leaves category names and post
+URLs unchanged.
 
 Pagefind selects its index from the document language. Korean search works,
 but the bundled release does not provide Korean stemming: related word forms
@@ -161,15 +162,22 @@ For example, `src/content/posts/backend/cache-invalidation.md` becomes
 title: Cache invalidation without guesswork
 published: 2026-10-21
 description: A short summary for listings and metadata.
-category: backend
 tags: [caching, performance]
 draft: false
 ---
 ```
 
-`title`, `published` and `category` are required. Category keys are declared in
-`src/config.ts`; tags are free-form. `updated` is an optional date. Drafts are
-visible during development and excluded from production builds.
+`title` and `published` are required. The first folder below
+`src/content/posts/` is the category. Its name is displayed exactly as authored
+and never translated. For example, `Statistics/nested/intro.mdx` belongs to
+**Statistics**; nested folders remain part of the post URL. No registration or
+frontmatter category field is needed. Category URLs use the same folder slugs
+as Astro post URLs: lowercase, spaces replaced with hyphens and punctuation
+removed, with Unicode preserved. Folder
+names that produce the same slug cannot be separate categories.
+Renaming or moving a folder can change URLs. Empty folders do not appear in
+category lists. Tags are free-form. Drafts are visible during development and
+excluded from production builds.
 
 Use `.mdx` when a post imports components. Keep post-specific datasets and TSX
 compositions in a neighbouring `_figures/` directory; these files are not posts.

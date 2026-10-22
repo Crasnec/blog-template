@@ -2,7 +2,6 @@
 title: Welcome to the Blog
 published: 2026-08-22
 description: A tour of the ideas behind this quiet, fast, and deliberately simple Astro blog.
-category: build
 tags: [astro, design, static-site]
 ---
 

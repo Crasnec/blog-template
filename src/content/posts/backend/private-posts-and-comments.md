@@ -2,7 +2,6 @@
 title: Private Posts and Moderated Comments
 published: 2026-08-19
 description: How the blog handles optional encrypted articles and a small, repository-backed comment system.
-category: backend
 tags: [privacy, comments, github-actions]
 ---
 
