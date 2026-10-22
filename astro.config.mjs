@@ -17,11 +17,16 @@ import {
 } from "./src/markdown.config.mjs";
 import { siteConfig } from "./src/config.ts";
 import pyodideAssets from "./scripts/pyodide-assets.mjs";
+import fontFaceGroups from "./scripts/font-face-groups.ts";
+
+/** @param {string | undefined} value @param {string} fallback */
+const environmentOr = (value, fallback) =>
+    value === undefined || value === "" ? fallback : value;
 
 export default defineConfig({
     // The Pages workflow supplies these; other hosts use src/config.ts.
-    site: process.env.SITE_URL || siteConfig.url,
-    base: process.env.SITE_BASE || "/",
+    site: environmentOr(process.env.SITE_URL, siteConfig.url),
+    base: environmentOr(process.env.SITE_BASE, "/"),
     trailingSlash: "always",
 
     // Expressive Code must be registered before MDX so that MDX inherits it.
@@ -52,12 +57,16 @@ export default defineConfig({
     build: { format: "directory" },
 
     vite: {
+        css: { postcss: { plugins: [fontFaceGroups()] } },
         resolve: {
             alias: {
                 "@theme": fileURLToPath(themeDir).replace(/[\\/]$/, ""),
             },
         },
         build: {
+            // Inlined subsets lose unicode-range's demand loading and bloat blocking CSS.
+            assetsInlineLimit: (filePath) =>
+                /\.(?:woff2?|ttf|otf)$/u.test(filePath) ? false : undefined,
             // Mermaid is large; keep it in its own async chunk.
             chunkSizeWarningLimit: 1600,
         },
