@@ -34,6 +34,7 @@ export const en = {
     "post.readingTime": "{count} min",
     "post.prev": "Previous",
     "figure.replay": "Replay",
+    "figure.data": "Data and labels",
     "playground.code": "Code editor",
     "playground.run": "Run",
     "playground.stop": "Stop",

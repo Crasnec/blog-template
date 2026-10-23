@@ -458,7 +458,9 @@ src/layouts/       Site and article layouts
 src/pages/         Static routes and generated assets
 src/playground/    Editors, execution workers, grammars and Python package policy
 src/plugins/       Markdown processing
-src/scripts/       Browser behaviour
+src/scripts/       Stable browser bundle entries
+src/site/          Lifecycle, search, navigation and reading features
+src/posts/         Post queries, categories, series and ordering
 src/styles/        Layout, prose, motion and three themes
 test/              Unit and browser checks
 ```
@@ -466,6 +468,9 @@ test/              Unit and browser checks
 `dist/`, `.astro/`, `.comments/`, `.cache/python/`, `node_modules/`, `secrets/`,
 local `.env*` files and screenshot output are ignored. Only `.env.example` is
 tracked as a blank configuration reference.
+
+See [module boundaries](docs/architecture.md) for import direction, lifecycle ownership
+and the internal Figure/playground structure.
 
 ## Category hierarchy regression checks
 
@@ -504,3 +509,14 @@ real hosting, network conditions, content, and browser versions can change score
 ## License
 
 [MIT](LICENSE). Included dependencies retain their respective licenses.
+
+## Scene and chart authoring
+
+The existing Figure system includes a `Scene` component with 82 prepared symbols,
+five automatic layouts and checked animation steps. Authors supply item IDs,
+labels and relationships without coordinates. See [Scene recipes](src/figures/scene/README.md)
+and `/posts/build/scene-kit/` for the complete visual catalog.
+
+`Bar`, `Pie` and `Area` cover category comparisons, parts of a whole and numeric
+time series. Each includes a static data table. See [chart conventions](src/figures/charts/README.md)
+and `/posts/build/basic-charts/`.

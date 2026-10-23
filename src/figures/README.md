@@ -3,6 +3,10 @@
 Canvas figures that draw themselves when they scroll into view. A post places
 one with `<Figure>`; the drawing lives in `kinds/<name>.ts`.
 
+The example pages below are included in the template content collection.
+Use a production build for browser regression checks, or start Astro with
+`npm run astro -- dev --background` for `figures:shot`.
+
 ```mdx
 import Figure from "../../../components/Figure.astro";
 
@@ -19,7 +23,7 @@ The import path climbs one `../` per directory between the post and `src/`.
 `src/content/posts/build/animated-figures.mdx` introduces `line`,
 `distribution`, `flow`, `queue` and post-specific TSX compositions. Read it at `/posts/build/animated-figures/`.
 
-## Typed components for all 44 reusable kinds
+## Typed components for all 48 reusable kinds
 
 Import a named TSX component from `src/components/figures`. Every component
 accepts `props` with that kind's input type, plus `caption`, `label` and
@@ -39,6 +43,19 @@ The fourteen mechanism/data components are `Line`, `Distribution`, `Flow`,
 PascalCase version of the kind name, with `ECDF`, `QQ`, `KDE`, `PP`, `ACF`,
 `PACF` and `ROC` capitalized. The index exports the full list. `<Figure>` is
 also available for newly added kinds and for old JSON shorthand inputs.
+
+The three basic chart components are `Bar`, `Pie` and `Area`. Bars support
+horizontal/vertical orientation and grouped, stacked and percentage modes.
+Pies include a donut variant. Areas use numeric x coordinates and support
+overlay, stacked and percentage modes. See
+[`charts/README.md`](charts/README.md) for contracts and conventions, and
+`/posts/build/basic-charts/` for working examples. Each basic chart includes
+a static, expandable data table, also available without JavaScript.
+
+For explanatory diagrams, start with `Scene`: 82 prepared visuals, five
+automatic layouts and semantic animation steps. It needs no coordinates or
+drawing callbacks. Read [`scene/README.md`](scene/README.md) and browse
+`/posts/build/scene-kit/` for the full visual catalog and copyable recipes.
 
 All demo posts now import their story figures from `_figures/*.tsx`; the MDX
 contains the surrounding prose. Repeated workloads such as the same maze,
@@ -128,6 +145,10 @@ Most figures do not need new code. Try these first.
 | Kind | Use it for | Loops |
 | --- | --- | --- |
 | `line` | a metric over time: traffic, latency, memory, an incident | no |
+| `scene` | prepared visuals with automatic layouts and checked animation steps | no |
+| `bar` | category comparisons: vertical/horizontal, grouped/stacked/100% | no |
+| `pie` | parts of a positive total, as a pie or donut | no |
+| `area` | numeric time series: overlay, stacked or percentage areas | no |
 | `distribution` | how values spread: response times, tails, p50 against p99 | no |
 | `flow` | where requests go: services, queues, caches, timeouts | yes |
 | `sequence` | messages between parties over time: handshakes, retries, lost packets, timeouts | no |
@@ -153,7 +174,7 @@ density contours, pairplot, jointplot, forest, funnel, Bland–Altman, mosaic,
 residuals, scale–location, influence, ACF, PACF, lag, Kaplan–Meier, ROC,
 precision–recall and calibration. Their exact `kind` names, input contracts,
 limits and statistical conventions are in
-[`statistics/README.md`](statistics/README.md). The published guide at
+[`statistics/README.md`](statistics/README.md). The fixture guide at
 `/posts/build/statistical-figures/` contains a working example of all thirty.
 
 Write a new kind only when the idea is a mechanism none of these can show,
@@ -429,7 +450,7 @@ The script also exits non-zero and prints the message if a figure threw in
 the browser. Fix what you see, run it again, and look again.
 
 Model regressions run with `npm test`. To check manual replay with reduced
-motion and resizing held frames, start `astro dev --background`, then run
+motion and resizing held frames, start the fixture server described above, then run
 `npm run test:figures:browser`. It reads the running server's URL from
 `.astro/dev.json`; `FIGURES_BASE` overrides it. These browser tests need
 Playwright's Chromium, just like `figures:shot`.
@@ -446,10 +467,10 @@ larger round-robin quantum or smaller job bursts to keep the trace bounded.
 - `src/components/SvgFigure.tsx` frames a post-specific SVG with a caption
   and accessible description. It renders HTML/SVG at build time.
 - `src/components/FigureExamples.tsx` renders a data-driven gallery of kinds.
-- `src/components/figures/index.tsx` exposes all 44 typed data components.
+- `src/components/figures/index.tsx` exposes all 48 typed data components.
 - `src/content/posts/build/_figures/*.tsx` contains examples of post-specific
   compositions and SVG drawings. These do not register new kinds.
-- `src/scripts/figures.ts` is the runtime: canvas sizing, the theme palette,
+- `src/figures/runtime.ts` is the runtime: canvas sizing, the theme palette,
   play on scroll into view, pause when off screen, replay, reduced motion,
   and `?figure-at=` for stills. It is imported only on pages that have a
   figure.
@@ -458,3 +479,6 @@ larger round-robin quantum or smaller job bursts to keep the trace bounded.
   no list to update.
 - `scripts/figures-shot.mjs` is the screenshot script behind
   `npm run figures:shot`.
+
+The toolkit is split into `core/` modules behind the stable `kit.ts` API.
+See [module boundaries](../../docs/architecture.md) for the runtime and model structure.
